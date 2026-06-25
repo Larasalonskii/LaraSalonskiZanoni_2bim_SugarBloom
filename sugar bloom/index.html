@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sugar Bloom</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <!DOCTYPE html>
@@ -61,13 +62,15 @@
             </select>
         </div>
 
-        <label>Granulado:</label>
-
-        <input type="radio" id="sim" name="granulado" value="true">
-        <label for="sim">Sim</label>
-
-        <input type="radio" id="nao" name="granulado" value="false">
-        <label for="nao">Não</label>
+        <div class="granulado-grupo">
+            <label>Granulado:</label>
+            <label class="radio-opcao">
+                <input type="radio" id="sim" name="granulado" value="true"> Sim
+            </label>
+            <label class="radio-opcao">
+                <input type="radio" id="nao" name="granulado" value="false"> Não
+            </label>
+        </div>
 
         <button onclick="aplicarfiltros()">
             Filtrar Cupcakes
@@ -88,7 +91,16 @@
 
 </body>
 <script>
+    function adicionarMensagem(texto, tipo) {
+        const chat = document.getElementById('chat');
+        const msg = document.createElement('div');
+        msg.className = tipo;
+        msg.textContent = texto;
+        chat.appendChild(msg);
+    }
+
     async function consultartodos() {
+        document.getElementById('chat').innerHTML = '';
         try {
             const response = await fetch('http://localhost:3001/cupcakes');
             const data = await response.json();
@@ -107,6 +119,7 @@
     }
 
     async function aplicarfiltros() {
+        document.getElementById('chat').innerHTML = '';
         try {
             const massa = document.getElementById('massaSelect').value;
             const cobertura = document.getElementById('coberturaSelect').value;
@@ -119,7 +132,6 @@
 
             if (massa) cupcakes = cupcakes.filter(c => c.massa === massa);
             if (cobertura) cupcakes = cupcakes.filter(c => c.cobertura === cobertura);
-
             if (granulado !== undefined) {
                 cupcakes = cupcakes.filter(c => c.granulado === (granulado === "true"));
             }

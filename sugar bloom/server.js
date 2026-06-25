@@ -2,6 +2,11 @@ const express = require('express');
 const { Pool } = require('pg');
 require('dotenv').config();
 
+
+
+console.log('DB_NAME:', process.env.DB_NAME); // adiciona isso
+console.log('DB_HOST:', process.env.DB_HOST); // e isso
+
 const app = express();
 const port = process.env.PORT || 3001;
 
@@ -12,6 +17,15 @@ const pool = new Pool({
     database: process.env.DB_NAME,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
+});
+
+pool.connect((err, client, release) => {
+    if (err) {
+        console.error('Erro ao conectar no banco:', err.message);
+    } else {
+        console.log('Banco conectado com sucesso!');
+        release();
+    }
 });
 
 app.use(express.json());
@@ -47,7 +61,7 @@ app.get('/cupcakes', async (req, res) => {
         });
 
     } catch (err) {
-        console.error(err);
+        console.error('ERRO DETALHADO:', err.message);
 
         res.status(500).json({
             sucesso: false,
